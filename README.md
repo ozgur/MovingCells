@@ -28,4 +28,5 @@ which forces us to find a way to rearranage cells in a collection view with a sm
 ![Screenshot of Rearranging cells](http://i.stack.imgur.com/AQaL6.gif)
 
 Implemented based on the following Stackoverflow question:
+
 http://stackoverflow.com/questions/36821289/reordering-uicollectionview-in-ios7
