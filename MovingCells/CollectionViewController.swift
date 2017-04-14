@@ -16,16 +16,16 @@ class CollectionViewController: UICollectionViewController {
     return collectionViewLayout as? UICollectionViewFlowLayout
   }
   
-  private var snapshotView: UIView?
-  private var snapshotIndexPath: NSIndexPath?
-  private var snapshotPanPoint: CGPoint?
+  fileprivate var snapshotView: UIView?
+  fileprivate var snapshotIndexPath: IndexPath?
+  fileprivate var snapshotPanPoint: CGPoint?
   
-  private func configureUI() {
+  fileprivate func configureUI() {
     collectionViewFlowLayout.minimumInteritemSpacing = 10.0
     collectionViewFlowLayout.minimumLineSpacing = 10.0
     collectionViewFlowLayout.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10)
-    collectionView?.registerClass(CollectionViewCell.self, forCellWithReuseIdentifier: "CollectionViewCell")
-    collectionView?.backgroundColor = .whiteColor()
+    collectionView?.register(CollectionViewCell.self, forCellWithReuseIdentifier: "CollectionViewCell")
+    collectionView?.backgroundColor = .white
 
     let gestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressRecognized(_:)))
     gestureRecognizer.minimumPressDuration = 0.2
@@ -36,36 +36,36 @@ class CollectionViewController: UICollectionViewController {
     super.viewDidLoad()
     
     title = "Images"
-    edgesForExtendedLayout = .None
-    view.backgroundColor = .whiteColor()
+    edgesForExtendedLayout = UIRectEdge()
+    collectionView?.backgroundColor = .white
     
     configureUI()
   }
   
-  func longPressRecognized(recognizer: UILongPressGestureRecognizer) {
-    let location = recognizer.locationInView(collectionView)
-    let indexPath = collectionView?.indexPathForItemAtPoint(location)
+  func longPressRecognized(_ recognizer: UILongPressGestureRecognizer) {
+    let location = recognizer.location(in: collectionView)
+    let indexPath = collectionView?.indexPathForItem(at: location)
     
     switch recognizer.state {
-    case UIGestureRecognizerState.Began:
+    case UIGestureRecognizerState.began:
       guard let indexPath = indexPath else { return }
       
-      let cell = cellForRowAtIndexPath(indexPath)
-      snapshotView = cell.snapshotViewAfterScreenUpdates(true)
+      let cell = cellForRow(at: indexPath)
+      snapshotView = cell.snapshotView(afterScreenUpdates: true)
       collectionView!.addSubview(snapshotView!)
       cell.contentView.alpha = 0.0
       
-      UIView.animateWithDuration(0.2) {
-        self.snapshotView?.transform = CGAffineTransformMakeScale(1.1, 1.1)
+      UIView.animate(withDuration: 0.2, animations: {
+        self.snapshotView?.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
         self.snapshotView?.alpha = 0.9
-      }
+      }) 
       
       snapshotPanPoint = location
       snapshotIndexPath = indexPath
-    case UIGestureRecognizerState.Changed:
+    case UIGestureRecognizerState.changed:
       guard let snapshotPanPoint = snapshotPanPoint else { return }
       
-      let translation = CGPointMake(location.x - snapshotPanPoint.x, location.y - snapshotPanPoint.y)
+      let translation = CGPoint(x: location.x - snapshotPanPoint.x, y: location.y - snapshotPanPoint.y)
       snapshotView?.center.x += translation.x
       snapshotView?.center.y += translation.y
       self.snapshotPanPoint = location
@@ -73,16 +73,16 @@ class CollectionViewController: UICollectionViewController {
       guard let indexPath = indexPath else { return }
       
       images.exchangeImageAtIndex(snapshotIndexPath!.item, withImageAtIndex: indexPath.item)
-      collectionView!.moveItemAtIndexPath(snapshotIndexPath!, toIndexPath: indexPath)
+      collectionView!.moveItem(at: snapshotIndexPath!, to: indexPath)
       snapshotIndexPath = indexPath
     default:
       guard let snapshotIndexPath = snapshotIndexPath else { return }
-      let cell = cellForRowAtIndexPath(snapshotIndexPath)
-      UIView.animateWithDuration(
-        0.2,
+      let cell = cellForRow(at: snapshotIndexPath)
+      UIView.animate(
+        withDuration: 0.2,
         animations: {
           self.snapshotView?.center = cell.center
-          self.snapshotView?.transform = CGAffineTransformIdentity
+          self.snapshotView?.transform = CGAffineTransform.identity
           self.snapshotView?.alpha = 1.0
         },
         completion: { finished in
@@ -101,8 +101,8 @@ class CollectionViewController: UICollectionViewController {
 
 extension CollectionViewController {
   
-  private func cellForRowAtIndexPath(indexPath: NSIndexPath) -> CollectionViewCell! {
-    return collectionView?.cellForItemAtIndexPath(indexPath) as? CollectionViewCell
+  fileprivate func cellForRow(at indexPath: IndexPath) -> CollectionViewCell {
+    return collectionView?.cellForItem(at: indexPath) as! CollectionViewCell
   }
 }
 
@@ -110,17 +110,17 @@ extension CollectionViewController {
 
 extension CollectionViewController {
   
-  func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
-                      sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
+                      sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
     
     let totalInteritemSpacing = (3 * collectionViewFlowLayout.minimumInteritemSpacing)
     let totalSectionInset = collectionViewFlowLayout.sectionInset.left + collectionViewFlowLayout.sectionInset.right
-    let size = (CGRectGetWidth(collectionView.bounds) - (totalSectionInset + totalInteritemSpacing)) / 4
+    let size = (collectionView.bounds.width - (totalSectionInset + totalInteritemSpacing)) / 4
     
     return CGSize(width: size, height: size)
   }
   
-  override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+  override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     print("Image selected at indexPath: \(indexPath)")
   }
 }
@@ -129,14 +129,14 @@ extension CollectionViewController {
 
 extension CollectionViewController {
   
-  override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+  override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return images.count
   }
   
-  override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath)
+  override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
     -> UICollectionViewCell {
       
-      let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CollectionViewCell", forIndexPath: indexPath)
+      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCell", for: indexPath)
       if let cell = cell as? CollectionViewCell {
         cell.imageView.image = images[indexPath.item]
       }

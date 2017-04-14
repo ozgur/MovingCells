@@ -10,14 +10,14 @@ import UIKit
 
 class ImageDataSource {
   
-  private var images = [UIImage]()
+  fileprivate var images = [UIImage]()
   
   init() {
     self.loadImages()
   }
   
-  private func loadImages() {
-    let filePath = NSBundle.mainBundle().pathForResource("Images", ofType: "plist")!
+  fileprivate func loadImages() {
+    let filePath = Bundle.main.path(forResource: "Images", ofType: "plist")!
     images.removeAll()
     
     for loadedImage in NSArray(contentsOfFile: filePath) ?? [] {
@@ -38,7 +38,7 @@ class ImageDataSource {
     return images.count
   }
   
-  func exchangeImageAtIndex(index: Int, withImageAtIndex otherIndex: Int) {
+  func exchangeImageAtIndex(_ index: Int, withImageAtIndex otherIndex: Int) {
     if index != otherIndex {
       swap(&images[index], &images[otherIndex])
     }
