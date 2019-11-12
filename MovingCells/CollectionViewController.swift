@@ -23,7 +23,7 @@ class CollectionViewController: UICollectionViewController {
   fileprivate func configureUI() {
     collectionViewFlowLayout.minimumInteritemSpacing = 10.0
     collectionViewFlowLayout.minimumLineSpacing = 10.0
-    collectionViewFlowLayout.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10)
+    collectionViewFlowLayout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     collectionView?.register(CollectionViewCell.self, forCellWithReuseIdentifier: "CollectionViewCell")
     collectionView?.backgroundColor = .white
 
@@ -42,7 +42,7 @@ class CollectionViewController: UICollectionViewController {
     configureUI()
   }
   
-  func longPressRecognized(_ recognizer: UILongPressGestureRecognizer) {
+  @objc func longPressRecognized(_ recognizer: UILongPressGestureRecognizer) {
     let location = recognizer.location(in: collectionView)
     let indexPath = collectionView?.indexPathForItem(at: location)
     
