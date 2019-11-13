@@ -47,6 +47,12 @@
       "idiom" : "ipad",
       "filename" : "app-spotlight@2x-1.png",
       "scale" : "2x"
+    },
+    {
+      "size" : "1024x1024",
+      "idiom" : "ios-marketing",
+      "filename" : "app-store.png",
+      "scale" : "1x"
     }
   ],
   "info" : {

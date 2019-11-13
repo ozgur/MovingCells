@@ -15,19 +15,19 @@ class CollectionViewCell: UICollectionViewCell {
   fileprivate func configureUI() {
     imageView.clipsToBounds = true
     imageView.layer.cornerRadius = 5.0
-    imageView.contentMode = UIViewContentMode.scaleAspectFill
+    imageView.contentMode = UIView.ContentMode.scaleAspectFill
     imageView.translatesAutoresizingMaskIntoConstraints = false    
 
     contentView.addSubview(imageView)
     contentView.addConstraints(NSLayoutConstraint.constraints(
       withVisualFormat: "H:|[imageView]|",
-      options: NSLayoutFormatOptions.alignAllCenterY,
+      options: NSLayoutConstraint.FormatOptions.alignAllCenterY,
       metrics: nil,
       views: ["imageView": imageView])
     )
     contentView.addConstraints(NSLayoutConstraint.constraints(
       withVisualFormat: "V:|[imageView]|",
-      options: NSLayoutFormatOptions.alignAllCenterX,
+      options: NSLayoutConstraint.FormatOptions.alignAllCenterX,
       metrics: nil,
       views: ["imageView": imageView])
     )
